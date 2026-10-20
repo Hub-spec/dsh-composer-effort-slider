@@ -14,6 +14,14 @@ All notable changes to this project are documented here. The format follows
 - Shortcut to change effort without opening the popover.
 - CI job running the Playwright harness.
 
+## [1.0.1] - 2026-10-20
+
+### Documentation
+
+- Add the five fill-effect screenshots (original / audio / aurora / grid / warp)
+  to the README gallery.
+- Add `dev/shots.py` to regenerate those screenshots.
+
 ## [1.0.0] - 2026-10-20
 
 Published to npm as [`dsh-composer-effort-slider`](https://www.npmjs.com/package/dsh-composer-effort-slider).
