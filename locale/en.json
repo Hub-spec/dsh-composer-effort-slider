@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Reasoning Effort Slider",
+    "description": "Switch this Session's reasoning effort (Off / Low / High / Max) right from the composer tool row; the change applies to the next request."
+  }
+}

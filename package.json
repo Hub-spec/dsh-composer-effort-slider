@@ -1,0 +1,60 @@
+{
+  "name": "dsh-composer-effort-slider",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Reasoning-effort slider in the DeepSeek Harness composer: Off / Low / High / Max, theme-adaptive, with fill, trail, and effect presets.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.2"
+  },
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "plugin",
+    "reasoning",
+    "effort",
+    "slider",
+    "composer"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hub-spec/dsh-composer-effort-slider.git"
+  },
+  "homepage": "https://github.com/Hub-spec/dsh-composer-effort-slider#readme",
+  "bugs": {
+    "url": "https://github.com/Hub-spec/dsh-composer-effort-slider/issues"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "src/*.js",
+    "docs/*.png",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-model-selection"
+      ]
+    }
+  }
+}

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>reasoning-effort-slider · local harness</title>
+<style>
+  body {
+    --dsw-alias-bg-base: #f7f8fa;
+    --dsw-alias-bg-layer-1: #ffffff;
+    --dsw-alias-bg-layer-2: #eef0f4;
+    --dsw-alias-border-l1: rgba(0, 0, 0, .10);
+    --dsw-alias-label-primary: #1b1b1f;
+    --dsw-alias-label-secondary: #6b7076;
+    --dsw-alias-state-business-primary: #4176e6;
+    --dsw-alias-state-error-primary: #f25a5a;
+    --dsw-shadow-lv3: 0 0 1px 0 rgba(0, 0, 0, .18), 0 12px 32px 0 rgba(0, 0, 0, .10);
+    margin: 0;
+    height: 100vh;
+    background: var(--dsw-alias-bg-base);
+    color: var(--dsw-alias-label-primary);
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+  body[data-ds-dark-theme] {
+    --dsw-alias-bg-base: #1b1b1c;
+    --dsw-alias-bg-layer-1: #232324;
+    --dsw-alias-bg-layer-2: #2c2c2e;
+    --dsw-alias-border-l1: rgba(255, 255, 255, .12);
+    --dsw-alias-label-primary: #f9fafb;
+    --dsw-alias-label-secondary: #979da6;
+    --dsw-alias-state-business-primary: #7aaaff;
+  }
+  .toolbar {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: var(--dsw-alias-bg-layer-1);
+    border: 1px solid var(--dsw-alias-border-l1);
+  }
+  .ghost { color: var(--dsw-alias-label-secondary); font-size: 12px; }
+</style>
+</head>
+<body data-ds-dark-theme>
+  <div class="toolbar">
+    <span class="ghost">composer tool row</span>
+    <div id="host"></div>
+  </div>
+
+  <script src="./node_modules/react/umd/react.development.js"></script>
+  <script src="./node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script>
+    (() => {
+      const efforts = [
+        { id: 'off', name: 'Off' },
+        { id: 'low', name: 'Low' },
+        { id: 'high', name: 'High' },
+        { id: 'max', name: 'Max' },
+      ];
+      const groups = [{
+        id: 'deepseek-official',
+        name: 'DeepSeek',
+        models: [{
+          id: 'deepseek-flash',
+          name: 'deepseek-flash',
+          reasoning: { defaultEffort: 'high', efforts },
+        }],
+      }];
+
+      let snapshot = {
+        status: 'ready',
+        groups,
+        failures: [],
+        current: { provider: 'deepseek-official', model: 'deepseek-flash', reasoningEffort: 'high' },
+        pending: null,
+      };
+      const listeners = new Set();
+      const emit = (patch) => {
+        snapshot = { ...snapshot, ...patch };
+        for (const listener of listeners) listener();
+      };
+      const store = {
+        getSnapshot: () => snapshot,
+        subscribe: (listener) => {
+          listeners.add(listener);
+          return () => listeners.delete(listener);
+        },
+      };
+
+      const selects = [];
+      const directory = {
+        store,
+        load: () => Promise.resolve(snapshot),
+        select: (selection) => {
+          selects.push(selection);
+          emit({ pending: selection });
+          setTimeout(() => {
+            emit({
+              current: {
+                provider: selection.provider,
+                model: selection.model,
+                reasoningEffort: selection.reasoningEffort,
+              },
+              pending: null,
+            });
+          }, 40);
+          return Promise.resolve({ ok: true });
+        },
+      };
+
+      const harness = {
+        log: [],
+        selects,
+        groups,
+        snapshot: () => snapshot,
+        emit,
+      };
+      window.__harness = harness;
+
+      const requireShim = (id) => (id === 'react' ? window.React : id === 'react-dom' ? window.ReactDOM : undefined);
+      window.__ModuleLoader__ = {
+        load: (entry) => {
+          harness.entry = entry;
+          harness.plugin = entry.factory(requireShim);
+        },
+      };
+
+      harness.mount = () => {
+        const plugin = harness.plugin;
+        const slots = {
+          inject: (key, callback) => callback(),
+          register: (options, Component) => {
+            harness.registration = { options, Component };
+            return () => {};
+          },
+        };
+        const locale = {
+          register: (ns, dicts) => {
+            harness.dicts = dicts;
+            return () => {};
+          },
+          bind: () => (key, vars) => {
+            const dict = (harness.dicts && harness.dicts.zh) || {};
+            let text = dict[key] === undefined ? key : dict[key];
+            if (vars) for (const name of Object.keys(vars)) text = text.replaceAll(`{${name}}`, String(vars[name]));
+            return text;
+          },
+        };
+        const ctx = {
+          effect: (callback) => {
+            const dispose = callback();
+            return typeof dispose === 'function' ? dispose : () => {};
+          },
+          locale,
+          inject: (deps, callback) => callback({
+            slots,
+            modelDirectories: { directoryFor: () => directory },
+            sessions: { subagentAddress: () => undefined },
+          }),
+        };
+        plugin.apply(ctx);
+        const registration = harness.registration;
+        const props = { ...registration.options.inject('session-harness'), sessionId: 'session-harness' };
+        const root = ReactDOM.createRoot(document.getElementById('host'));
+        root.render(React.createElement(registration.Component, props));
+      };
+    })();
+  </script>
+  <script src="../client.js"></script>
+  <script>
+    window.__harness.mount();
+  </script>
+</body>
+</html>

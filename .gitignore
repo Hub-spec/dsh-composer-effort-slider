@@ -1,0 +1,8 @@
+node_modules/
+dev/node_modules/
+dev/report.json
+dev/*.png
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
