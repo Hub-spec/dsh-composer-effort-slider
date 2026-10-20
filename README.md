@@ -12,9 +12,23 @@ tool row, drag the capsule, and the change applies to the next request.
 ![dark](docs/dark.png)
 ![settings](docs/settings.png)
 
-| Light theme | Warp fill effect |
+同一弹层的亮色主题：
+
+![light](docs/light.png)
+
+### 填充特效
+
+五种填充特效（均为 Max 档）：
+
+| 原页面（默认） | 音频条 | 极光 |
+| --- | --- | --- |
+| ![original](docs/effect-original.png) | ![audio](docs/effect-audio.png) | ![aurora](docs/effect-aurora.png) |
+
+| 格子 | 超空间 |
 | --- | --- |
-| ![light](docs/light.png) | ![warp](docs/warp.png) |
+| ![grid](docs/effect-grid.png) | ![warp](docs/effect-warp.png) |
+
+拖尾效果只在「原页面」下可选；其余特效会接管整条轨道。
 
 English | [中文](#中文说明) · [更新记录](CHANGELOG.md) · [参与开发](CONTRIBUTING.md)
 
@@ -103,7 +117,8 @@ node dev/build.mjs        # src/*.js -> client.js
 
 ```bash
 npm install --prefix dev react@18.2.0 react-dom@18.2.0
-python dev/drive.py
+python dev/drive.py     # 回归断言
+python dev/shots.py     # 重新生成 docs/effect-*.png 特效截图
 ```
 
 ## 路线图
