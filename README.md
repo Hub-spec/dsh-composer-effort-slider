@@ -1,6 +1,7 @@
 # dsh-composer-effort-slider
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/dsh-composer-effort-slider.svg)](https://www.npmjs.com/package/dsh-composer-effort-slider)
 [![DSH](https://img.shields.io/badge/DeepSeek%20Harness-0.2.1--rc.2-4d6bfe)](https://github.com/deepseek-ai)
 
 把 DeepSeek Harness 的**推理等级**做成输入框里的一个滑杆：点开即拖，松手写回当前会话。
@@ -43,7 +44,7 @@ English | [中文](#中文说明) · [更新记录](CHANGELOG.md) · [参与开�
 
 ## 安装
 
-从 npm（发布后）：
+从 npm：
 
 ```bash
 dsh plugin --profile desktop add dsh-composer-effort-slider

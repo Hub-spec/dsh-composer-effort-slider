@@ -16,6 +16,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [1.0.0] - 2026-10-20
 
+Published to npm as [`dsh-composer-effort-slider`](https://www.npmjs.com/package/dsh-composer-effort-slider).
+
 ### Added
 
 - Composer trigger showing the current effort level, with a popover hosting the
