@@ -41,6 +41,8 @@
     "src/*.js",
     "docs/*.png",
     "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
     "LICENSE"
   ],
   "dsh": {
